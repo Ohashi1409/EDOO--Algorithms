@@ -4,18 +4,18 @@ using namespace std;
 
 template <typename E>
 class Node {
-    public:
-        E element;
-        Node* next;
+public:
+    E element;
+    Node* next;
 
-        Node(Node* nextVal) {
-            this->next = nextVal;
-        }
+    Node(Node* nextVal) {
+        this->next = nextVal;
+    }
 
-        Node(E it, Node* nextVal) {
-            this->element = it;
-            this->next = nextVal;
-        } 
+    Node(E it, Node* nextVal) {
+        this->element = it;
+        this->next = nextVal;
+    } 
 };
 
 template <typename E>
