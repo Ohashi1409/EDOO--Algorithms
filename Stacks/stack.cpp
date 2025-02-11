@@ -30,7 +30,7 @@ public:
 };
 
 template <typename E>
-class Stack {
+class Stack : public adtStack<E> {
 private:
     Node<E>* top;
     int size;

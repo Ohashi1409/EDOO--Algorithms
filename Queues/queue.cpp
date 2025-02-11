@@ -30,7 +30,7 @@ public:
 };
 
 template <typename E>
-class Queue {
+class Queue : public adtQueue<E> {
 private:
     Node<E>* front;
     Node<E>* rear;
