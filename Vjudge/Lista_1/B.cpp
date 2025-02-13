@@ -46,12 +46,10 @@ public:
         this->size++;
     }
 
-    E pop() {
+    void pop() {
         if (this->top == nullptr) { throw "Error: Cannot pop from an empty stack.";}
-        E it = this->top->element;
         this->top = this->top->next;
         this->size--;
-        return it;
     }
 
     E topValue() {
@@ -77,18 +75,17 @@ public:
 int main() {
     int qtd_casos;
     cin >> qtd_casos;
+    cin.ignore();
+
     for (int i = 0; i < qtd_casos; i++) {
         string str;
-        cin >> str;
+        getline(cin, str);
 
         Stack<char> stack;
 
-        if (stack.validExpression(str)) {
-            cout << "Yes" << endl;
-        } 
-        else {
-            cout << "No" << endl;
-        } 
+        if (stack.validExpression(str)) { cout << "Yes"; } 
+        else { cout << "No"; } 
+        cout << endl;
     }
     return 0;
 }
