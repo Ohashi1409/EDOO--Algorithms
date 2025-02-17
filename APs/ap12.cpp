@@ -2,25 +2,23 @@
 
 using namespace std;
 
-template <typename Key, typename E>
+template <typename Key>
 class BSTNode {
-private:
+public:
     Key key;
-    E element;
     BSTNode* left;
     BSTNode* right;
-public:
-    BSTNode(Key k, E e) {
+
+    BSTNode(Key k) {
         this->key = k;
-        this->element = e;
         this->left = this->right = nullptr;
     }
 };
 
-template <typename Key, typename E>
+template <typename Key>
 class BST {
 private:
-    BSTNode<Key, E>* root;
+    BSTNode<Key>* root;
     int nodecount;
 public:
     BST() {
@@ -28,90 +26,94 @@ public:
         this->nodecount = 0;
     }
 
-    E find(Key k) {
-        return this->findhelp(this->root, k)
+    Key find(Key k) {
+        return this->findhelp(this->root, k);
     }
 
-    E findhelp(BSTNode<Key, E>* rt, Key k) {
+    Key findhelp(BSTNode<Key>* rt, Key k) {
         if (rt == nullptr) { return nullptr; }
-        if (rt->key > k) { return findhelp(rt->left, k); }
-        else if (rt->key == k) { return rt->element; }
-        else { return findhelp(rt->right, k); }
+        if (rt->key > k) { return this->findhelp(rt->left, k); }
+        else if (rt->key == k) { return rt->key; }
+        else { return this->findhelp(rt->right, k); }
     }
 
-    void insert(Key k, E e) {
-        this->root = inserthelp();
+    void insert(Key k) {
+        this->root = this->inserthelp(this->root, k);
         this->nodecount++;
     }
 
-    BSTNode* inserthelp(BSTNode<Key, E>* rt, Key k, E e) {
-        if (rt == nullptr) { return new BSTNode(k, e); }
-        if (rt->key > k) { rt->left = inserthelp(rt->left, k, e); }
-        else { rt->right = inserthelp(rt->right, k, e); }
+    BSTNode<Key>* inserthelp(BSTNode<Key>* rt, Key k) {
+        if (rt == nullptr) { return new BSTNode<Key>(k); }
+        if (rt->key > k) { rt->left = this->inserthelp(rt->left, k); }
+        else { rt->right = this->inserthelp(rt->right, k); }
         return rt;
     }
 
-    E remove(Key k) {
-        E temp = findhelp(this->root, k);
+    Key remove(Key k) {
+        Key temp = this->findhelp(this->root, k);
         if (temp != nullptr) {
-            
+            this->root = this->removehelp(this->root, k);
+            this->nodecount--;
         }
+        return temp;
     }
 
-    BSTNode* removehelp(BSTNode<Key, E>* rt, Key k) {
+    BSTNode<Key>* removehelp(BSTNode<Key>* rt, Key k) {
         if (rt == nullptr) { return nullptr; }
-        if (rt->key > k) { rt->left = removehelp(rt->left, k); }
-        else if (rt->key < k) { rt->right = removehelp(rt->right, k); }
+        if (rt->key > k) { rt->left = this->removehelp(rt->left, k); }
+        else if (rt->key < k) { rt->right = this->removehelp(rt->right, k); }
         else {
             if (rt->left == nullptr) { return rt->right; }
             else if (rt->right == nullptr) { return rt->left; }
             else {
-                BSTNode<Key, E> temp = getmin(rt->right);
-                rt->element = temp.element;
+                BSTNode<Key> temp = this->getmin(rt->right);
                 rt->key = temp.key;
-                rt->right = deletemin(rt->right);
+                rt->right = this->deletemin(rt->right);
             }
         }
         return rt;
     }
 
-    BSTNode* getmin(BSTNode<Key, E>* rt) {
+    BSTNode<Key>* getRoot() { return this->root; }
+
+    BSTNode<Key>* getmin(BSTNode<Key>* rt) {
         if (rt->left == nullptr) { return rt; }
-        return 
+        return this->getmin(rt->left);
     }
 
-    BSTNode* deletemin(BSTNode<Key, E>* rt) {
+    BSTNode<Key>* deletemin(BSTNode<Key>* rt) {
         if (rt->left == nullptr) { return rt->right; }
-        rt->left = deletemin(rt->left);
+        rt->left = this->deletemin(rt->left);
         return rt;
     }
 
-    void preorder(BSTNode<Key, E>* rt) {
+    void preorder(BSTNode<Key>* rt) {
         if (rt != nullptr) { 
-            cout << rt->element << endl; 
-            preorder(rt->left);
-            preorder(rt->right);
+            cout << rt->key << " "; 
+            this->preorder(rt->left);
+            this->preorder(rt->right);
         }
     }
 
-    void inorder(BSTNode<Key, E>* rt) {
+    void inorder(BSTNode<Key>* rt) {
         if (rt != nullptr) {
-            inorder(rt->left);
-            cout << rt->element << endl;
-            inorder(rt->right);
+            this->inorder(rt->left);
+            cout << rt->key << " ";
+            this->inorder(rt->right);
         }
     }
 
-    void posorder(BSTNode<Key, E>* rt) {
+    void posorder(BSTNode<Key>* rt) {
         if (rt != nullptr) {
-            posorder(rt->left);
-            posorder(rt->right);
-            cout << rt->element << endl;
+            this->posorder(rt->left);
+            this->posorder(rt->right);
+            cout << rt->key << " ";
         }
     }
 };
 
 int main() {
+    BST<int> bst;
     int qtd_op;
     cin >> qtd_op;
     for (int i = 0; i < qtd_op; i++) {
@@ -120,15 +122,19 @@ int main() {
         if (op == "insert") {
             int num;
             cin >> num;
+            bst.insert(num);
         }
         else if (op == "pre"){
-
+            bst.preorder(bst.getRoot());
+            cout << endl;
         }
         else if (op == "in") {
-
+            bst.inorder(bst.getRoot());
+            cout << endl;
         }
         else if (op == "post") {
-
+            bst.posorder(bst.getRoot());
+            cout << endl;
         }
     }
  
