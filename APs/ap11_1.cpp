@@ -6,11 +6,11 @@ using namespace std;
 
 class Dict {
 private:
-    int m;
+    int len;
     list<int> *H;
 public:
     Dict(int size) {
-        this->m = size;
+        this->len = size;
         this->H = new list<int>[size];
     }
 
@@ -32,7 +32,7 @@ public:
     }
 
     void print() {
-        for (int i = 0; i < this->m; i++) {
+        for (int i = 0; i < this->len; i++) {
             cout << i << " ";
             for (int value : this->H[i]) {
                 cout << value << " ";
