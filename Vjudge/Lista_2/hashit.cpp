@@ -50,7 +50,7 @@ public:
         } else {
             for (int i = 0; i < 19; i++) {
                 int offset = this->perm[i];
-                pos = abs(pos + offset) % this->m;
+                pos = abs(this->h(e) + offset) % this->m;
     
                 if (this->hash_table[pos] != nullptr && this->hash_table[pos]->second == e) {
                     return pos;
@@ -71,7 +71,7 @@ public:
             } else {
                 for (int i = 0; i < 19; i++) {
                     int offset = this->perm[i];
-                    pos = abs(pos + offset) % this->m;
+                    pos = abs(this->h(e) + offset) % this->m;
     
                     if (this->hash_table[pos] == nullptr || this->hash_table[pos]->first != 1) {
                         this->hash_table[pos] = new pair<int, string>(1, e);
