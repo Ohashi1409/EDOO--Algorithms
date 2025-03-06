@@ -1,86 +1,63 @@
 #include <iostream>
-#include <string>
 #include <vector>
-#include <sstream>
+#include <string>
 
 using namespace std;
 
-class Dict{
+class Dict {
 private:
     int m;
-    int cnt;
-    pair<string, string> **hash_table;
-    vector<bool> *deleted;
+    vector<pair<string, string>>* hash_table;
+    //Element = Palavra traduzida
+    //Key = Palavra no Inglês padrão
 public:
     Dict(int size) {
         this->m = size;
-        this->cnt = 0;
-        this->hash_table = new pair<string, string>*[size];
-        this->deleted = new vector<bool>(size, false);
-    
-        for(int i = 0; i<size; i++){
-            this->hash_table[i]->first = "";
-            this->hash_table[i]->second = "";
+        this->hash_table = new vector<pair<string, string>>[size];
+    }
+
+    ~Dict() { delete[] this->hash_table; }
+
+    int h(string element) {
+        int sum = 0;
+        for (size_t i = 0; i < element.length(); i++) {
+            sum += int(element[i]) * (i + 1);
         }
+        sum *= 7;
+        return abs(sum) % this->m;
     }
 
-    string h(const string& word) {
-        string vowels = "aeiou";
-        size_t first_vowel_index = word.find_first_of(vowels); // Encontra a primeira vogal
-    
-        if (first_vowel_index == string::npos) { return word + "ay"; }
-    
-        return word.substr(first_vowel_index) + word.substr(0, first_vowel_index) + "ay";
-    }
-
-    int find(string element) {
-        string key = this->h(element);
-        while (this->hash_table->first != "") {
-            if ((this->hash_table[pos]->first == element) && (!this->hash_table[pos]->second)) {
-                return pos;
-            }
-            pos = (pos+1)%this->m;
-        }
-        return -1;
-    }
-
-    void insert(string element) {
-        if ((this->cnt < this->m) && !find(element)) {
-            int pos = this->h(element);
-            if (this->hash_table[pos]->first != "" && !this->hash_table[pos]->second) {
-                do {
-                    pos = (pos+1)%this->m;
-                } while (this->hash_table[pos]->first != "" && !this->hash_table[pos]->second);
-            }
-            this->hash_table[pos] = new pair<string, bool>(element, false);
-            this->cnt++;
-        }
-    }
-
-    void remove(string element) {
-        if (find(element) != -1) {
-            int pos = this->h(element);
-            while (!this->hash_table[pos]->first.empty()) {
-                if ((this->hash_table[pos]->first == element) && (!this->hash_table[pos]->second)) {
-                    this->hash_table[pos]->second = true;
-                    this->cnt--;
-                }
-                pos = (pos+1)%this->m;
+    string find(string element) {
+        int pos = this->h(element);
+        for (pair<string, string> e : this->hash_table[pos]) {
+            if (e.second == element) {
+                return e.first;
             }
         }
+        return "eh";
+    }
+
+    void add(string key, string element) {
+        int pos = this->h(element);
+        this->hash_table[pos].push_back(make_pair(key, element));
     }
 };
-
+ 
 int main() {
-    string line;
-    while (getline(cin, line)) {
-        if (line.empty()) { break; }
+    string line = "";
+    string key, element;
+    Dict dict(100);
 
-        istringstream iss(line);
-        string original, translated;
-        iss >> original >> translated;
+    while (getline(cin, line) && !line.empty()) {
+        int pos = line.find(' ');
+        key = line.substr(0, pos);
+        element = line.substr(pos+1);
 
-        
+        dict.add(key, element);
+    }
+
+    while (cin >> element) {
+        cout << dict.find(element) << endl;
     }
 
     return 0;
