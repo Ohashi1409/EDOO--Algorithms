@@ -10,6 +10,7 @@ private:
     pair<int, string> **hash_table;
     int *perm;
 
+    //-1 = não existe
     //0 = vazio
     //1 = ocupado
     //2 = deletado
@@ -47,7 +48,8 @@ public:
     
         if (this->hash_table[pos] != nullptr && this->hash_table[pos]->second == e) {
             return pos;
-        } else {
+        } 
+        else {
             for (int i = 0; i < 19; i++) {
                 int offset = this->perm[i];
                 pos = abs(this->h(e) + offset) % this->m;
@@ -63,12 +65,14 @@ public:
     void add(string e) {        
         if (this->m <= this->cnt || this->find(e) != -1) { 
             return; 
-        } else {        
+        } 
+        else {        
             int pos = this->h(e);
             if (this->hash_table[pos] == nullptr || this->hash_table[pos]->first != 1) {
                 this->hash_table[pos] = new pair<int, string>(1, e);
                 this->cnt++;
-            } else {
+            } 
+            else {
                 for (int i = 0; i < 19; i++) {
                     int offset = this->perm[i];
                     pos = abs(this->h(e) + offset) % this->m;
@@ -85,7 +89,6 @@ public:
     
     void del(string e) {
         int pos = this->find(e);
-    
         if (pos != -1) {
             this->hash_table[pos]->first = 2;
             this->hash_table[pos]->second = "";
@@ -133,7 +136,8 @@ int main() {
 
             if (command == "ADD") {
                 dict->add(element);
-            } else if (command == "DEL") {
+            } 
+            else if (command == "DEL") {
                 dict->del(element);
             }
         }
