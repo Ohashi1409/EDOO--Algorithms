@@ -18,7 +18,7 @@ private:
     vector<Entry> hash_table;
 
     int h(int key) {
-        return key - (this->len * static_cast<int>(floor(static_cast<double>(key) / this->len)));
+        return key - (this->len * (int)(floor((double)(key) / this->len)));
     }
 
 public:
